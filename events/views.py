@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
@@ -9,6 +9,9 @@ from django.db.models import Q
 
 from .models import Event, Topic, Comment
 from .forms import EventForm
+
+
+User = get_user_model()
 
 
 def login_page(request):
