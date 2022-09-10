@@ -1,0 +1,31 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<div clss="event-container">
+    <h3>{{event.name}}</h3>
+    <p>{{event.description}}</p>
+
+    <div class="comment-wrapper">
+        {% for comment in event_comments %}
+        <div>
+            {% if request.user == comment.user %}
+            <a href="{% url 'delete-comment' comment.id %}">Delete</a>
+            {% endif %}
+            <small>@{{comment.user}}  {{comment.created|timesince}} ago</small>
+            <p>{{comment.body}}</p>
+            <hr>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if request.user.is_authenticated %}
+    <div class="comment-form">
+        <form method="POST" action="">
+            {% csrf_token %}
+            <input type="text" name="body" placeholder="Write your comment here..">
+        </form>
+    </div>
+    {% endif %}
+</div>
+{% endblock content %}

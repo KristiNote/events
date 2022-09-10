@@ -1,0 +1,43 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<style>
+    .home-container {
+        display:grid;
+        grid-template-columns: 3fr 1fr ;
+    }
+</style>
+
+<div class="home-container">
+
+    <div>
+        <h5>{{event_count}} Events</h5>
+        <a href="{% url 'create-event' %}">Create Event</a>
+
+        <div>
+            {% for event in events %}
+            <div>
+                <a href="{% url 'update-event' event.id %}">Edit</a>
+                <a href="{% url 'delete-event' event.id %}">Delete</a>
+                <h5> {{event.id}} -- <a href="{% url 'event' event.id %}">{{event.name}}</a></h5>
+                <p> {{ event.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div>
+        <h3>Topics</h3>
+        <div>
+            <a href="{% url 'home' %}">All</a>
+        </div>
+        {% for topic in topics %}
+            <div>
+                <a href="{% url 'home' %}?q={{topic.name}}">{{topic.name}}</a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock content %}
