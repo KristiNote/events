@@ -20,8 +20,9 @@
             <div>
                 <a href="{% url 'update-event' event.id %}">Edit</a>
                 <a href="{% url 'delete-event' event.id %}">Delete</a>
-                <h5> {{event.id}} -- <a href="{% url 'event' event.id %}">{{event.name}}</a></h5>
+                <h1> {{event.id}} -- <a href="{% url 'event' event.id %}">{{event.name}}</a></h1>
                 <p> {{ event.description }}</p>
+                <img src="{{ event.image.url }}">
             </div>
             {% endfor %}
         </div>

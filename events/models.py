@@ -10,12 +10,12 @@ class Topic(models.Model):
 
 
 class Event(models.Model):
-    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null= True)
+    topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=200)
     description = models.TextField()
     location = models.CharField(max_length=200)
     #date
-    #photo
+    image = models.ImageField(upload_to='event/images/', null=True)
     #video
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now_add=True)
