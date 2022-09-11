@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse
 from django.contrib import messages
@@ -92,7 +92,7 @@ def get_event_details(request, pk):
     return render(request, 'event.html', context)
 
 
-@login_required(login_url='login')
+@permission_required("events.add_event")
 def create_event(request):
     form = EventForm()
 
@@ -105,7 +105,7 @@ def create_event(request):
     return render(request, "event_form.html", {'form': form})
 
 
-@login_required(login_url='login')
+@permission_required("events.change_event")
 def update_event(request, pk):
     event = Event.objects.get(id=pk)
     form = EventForm(instance=event)
@@ -120,7 +120,7 @@ def update_event(request, pk):
     return render(request, 'event_form.html', context)
 
 
-@login_required(login_url='login')
+@permission_required("events.delete_event")
 def delete_event(request, pk):
     event = Event.objects.get(id=pk)
 

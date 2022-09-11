@@ -14,9 +14,12 @@ class Event(models.Model):
     name = models.CharField(max_length=200)
     description = models.TextField()
     location = models.CharField(max_length=200)
-    #date
     image = models.ImageField(upload_to='event/images/', null=True)
+    #event-url
     #video
+    # date-start
+    # date-end
+    #ticket-available
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now_add=True)
 
