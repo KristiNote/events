@@ -22,8 +22,9 @@
                 <a href="{% url 'delete-event' event.id %}">Delete</a>
                 <h1> {{event.id}} -- <a href="{% url 'event' event.id %}">{{event.name}}</a></h1>
                 <h2>{{ event.location}}</h2>
-                <p> {{ event.description }}</p>
+                <h3>From {{event.start_date}} to {{event.end_date}}</h3>
                 <img src="{{ event.image.url }}" class="card-img">
+                <p> {{ event.description }}</p>
             </div>
             {% endfor %}
         </div>

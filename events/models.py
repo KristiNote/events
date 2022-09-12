@@ -15,13 +15,12 @@ class Event(models.Model):
     description = models.TextField()
     location = models.CharField(max_length=200)
     image = models.ImageField(upload_to='event/images/', null=True)
-    #event-url
     #video
-    # date-start
-    # date-end
-    #ticket-available
-    created = models.DateTimeField(auto_now=True)
-    updated = models.DateTimeField(auto_now_add=True)
+    # ticket_available
+    start_date = models.DateTimeField(null=True)
+    end_date = models.DateTimeField(null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering =['-updated', '-created']
