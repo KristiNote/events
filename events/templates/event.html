@@ -2,9 +2,16 @@
 
 {% block content %}
 
+
 <div clss="event-container">
+
     <h3>{{event.name}}</h3>
+    <img src="{{ event.image.url }}" class="card-img" style="width:350px; height:350px;">
     <p>{{event.description}}</p>
+    <h4>{{event.location}}</h4>
+    <h5>from {{event.start_date}}</h5>
+    <h5>to {{event.end_date}}</h5>
+    <hr>
 
     <div class="comment-wrapper">
         {% for comment in event_comments %}

@@ -6,6 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse
 from django.contrib import messages
 from django.db.models import Q
+from django.core.paginator import Paginator
 
 from .models import Event, Topic, Comment
 from .forms import EventForm
@@ -72,6 +73,14 @@ def home(request):
 
     topics = Topic.objects.all()
     event_count = events.count()
+
+    try:
+        page_no = int(request.GET.get("page", "1"))
+    except ValueError:
+        page_no = 1
+
+    paginator = Paginator(events, per_page=2)
+    page_obj = paginator.page(page_no)
 
     context = {'events': events, 'topics': topics, 'event_count': event_count}
     return render(request, 'home.html', context)
