@@ -1,3 +1,5 @@
+from django import template
+from django.contrib.auth.models import Group
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login, logout
@@ -13,6 +15,7 @@ from .forms import EventForm
 
 
 User = get_user_model()
+
 
 
 def login_page(request):
@@ -145,10 +148,12 @@ def delete_comment(request, pk):
     comment = Comment.objects.get(id=pk)
 
     if request.user != comment.user:
-        return HttpResponse('You are not allowed here')
+        return redirect('login')
 
     if request.method == 'POST':
         comment.delete()
         return redirect('home')
 
     return render(request, 'delete.html', {'obj': comment})
+
+

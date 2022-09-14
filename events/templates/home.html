@@ -1,5 +1,9 @@
 {% extends 'main.html' %}
 
+{% load static %}
+{% load filter %}
+
+
 {% block content %}
 
 <style>
@@ -12,16 +16,19 @@
 <div class="home-container">
 
     <div>
-        <h5>{{event_count}} Events</h5>
-        <a href="{% url 'create-event' %}">Create Event</a>
-
+        <h4>{{event_count}} Events</h4>
+        {% if request.user|has_group:"Stafi" %}
+            <a href="{% url 'create-event' %}">Create Event</a>
+        {% endif %}
         <div>
             {% for event in events %}
             <div>
-                <a href="{% url 'update-event' event.id %}">Edit</a>
-                <a href="{% url 'delete-event' event.id %}">Delete</a>
-                <h1> {{event.id}} -- <a href="{% url 'event' event.id %}">{{event.name}}</a></h1>
-                <h2>{{ event.location}}</h2>
+                {% if request.user|has_group:"Stafi" %}
+                    <a href="{% url 'update-event' event.id %}">Edit</a>
+                    <a href="{% url 'delete-event' event.id %}">Delete</a>
+                {% endif %}
+                <h2> {{event.id}} -- <a href="{% url 'event' event.id %}">{{event.name}}</a></h2>
+                <h3>{{ event.location}}</h3>
                 <h4>From {{event.start_date}} to {{event.end_date}}</h4>
                 <img src="{{ event.image.url }}" class="card-img" style="width:350px; height:350px;">
                 <p> {{ event.description }}</p>
@@ -31,13 +38,13 @@
     </div>
 
     <div>
-        <h3>Topics</h3>
+        <h2>Topics</h2>
         <div>
-            <a href="{% url 'home' %}">All</a>
+            <h3><a href="{% url 'home' %}">All</a></h3>
         </div>
         {% for topic in topics %}
             <div>
-                <a href="{% url 'home' %}?q={{topic.name}}">{{topic.name}}</a>
+                <h3><a href="{% url 'home' %}?q={{topic.name}}">{{topic.name}}</a></h3>
             </div>
         {% endfor %}
     </div>
