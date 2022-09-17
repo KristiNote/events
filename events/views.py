@@ -122,7 +122,7 @@ def update_event(request, pk):
     form = EventForm(instance=event)
 
     if request.method == 'POST':
-        form = EventForm(request.POST, instance=event)
+        form = EventForm(request.POST, request.FILES, instance=event)
         if form.is_valid():
             form.save()
             return redirect('home')
@@ -151,7 +151,7 @@ def delete_comment(request, pk):
 
     if request.method == 'POST':
         comment.delete()
-        return redirect('home')
+        return redirect('event', pk=comment.event_id)
 
     return render(request, 'delete.html', {'obj': comment})
 
