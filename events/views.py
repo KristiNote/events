@@ -1,5 +1,3 @@
-from django import template
-from django.contrib.auth.models import Group
 from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login, logout
@@ -9,6 +7,7 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
+import datetime
 
 from .models import Event, Topic, Comment
 from .forms import EventForm
@@ -155,5 +154,16 @@ def delete_comment(request, pk):
         return redirect('home')
 
     return render(request, 'delete.html', {'obj': comment})
+
+
+
+def week_events(request):
+    date = datetime.date.today()
+    start_week = date - datetime.timedelta(date.weekday())
+    end_week = start_week + datetime.timedelta(7)
+
+    event_this_week = Event.objects.filter(start_date__range=[start_week, end_week])
+
+    return render(request, 'events_of_week.html', {'event_this_week': event_this_week})
 
 

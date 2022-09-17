@@ -11,5 +11,5 @@ urlpatterns = [
     path('update-event/<int:pk>/', views.update_event, name="update-event"),
     path('delete-event/<int:pk>/', views.delete_event, name="delete-event"),
     path('delete-comment/<int:pk>/', views.delete_comment, name="delete-comment"),
-
+    path('week-event', views.week_events, name="week-event"),
 ]

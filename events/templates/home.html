@@ -17,8 +17,13 @@
 
     <div>
         <h4>{{event_count}} Events</h4>
+
+        <a href="{% url 'week-event' %}">This week</a>
+        <hr>
+
         {% if request.user|has_group:"Stafi" %}
             <a href="{% url 'create-event' %}">Create Event</a>
+            <hr>
         {% endif %}
         <div>
             {% for event in events %}
