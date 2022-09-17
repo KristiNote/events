@@ -19,11 +19,11 @@
         <h4>{{event_count}} Events</h4>
 
         <a href="{% url 'week-event' %}">This week</a>
-        <hr>
+        <br>
 
         {% if request.user|has_group:"Stafi" %}
             <a href="{% url 'create-event' %}">Create Event</a>
-            <hr>
+            <br>
         {% endif %}
         <div>
             {% for event in events %}
@@ -32,9 +32,16 @@
                     <a href="{% url 'update-event' event.id %}">Edit</a>
                     <a href="{% url 'delete-event' event.id %}">Delete</a>
                 {% endif %}
-                <h2> {{event.id}} -- <a href="{% url 'event' event.id %}">{{event.name}}</a></h2>
+                <h2> {{event.id}} -- <a href="{% url 'event' event.id %}">{{event.name}} </a></h2>
+
+                <section class="section">
+                <div class="container">
+                  <button class="button is-primary" id="submitBtn">Purchase!</button>
+                </div>
+                </section>
+
                 <h3>{{ event.location}}</h3>
-                <h4>From {{event.start_date}} to {{event.end_date}}</h4>
+                <h4>{{event.start_date}} </h4>
                 <img src="{{ event.image.url }}" class="card-img" style="width:350px; height:350px;">
                 <p> {{ event.description }}</p>
             </div>

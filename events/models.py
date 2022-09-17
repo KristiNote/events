@@ -18,7 +18,6 @@ class Event(models.Model):
     #video
     # ticket_available
     start_date = models.DateTimeField(null=True)
-    end_date = models.DateTimeField(null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
