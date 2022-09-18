@@ -3,20 +3,11 @@
 {% load static %}
 {% load filter %}
 
-
 {% block content %}
-
-<style>
-    .home-container {
-        display:grid;
-        grid-template-columns: 3fr 1fr ;
-    }
-</style>
-
 <div class="home-container">
 
     <div>
-        <h4>{{event_count}} Events</h4>
+        <h4>{{ event_count }} Events</h4>
 
         <a href="{% url 'week-event' %}">This week</a>
         <br>
@@ -25,7 +16,7 @@
             <a href="{% url 'create-event' %}">Create Event</a>
             <br>
         {% endif %}
-        <div>
+        <div class="event-list">
             {% for event in events %}
             <div>
                 {% if request.user|has_group:"Stafi" %}
@@ -36,7 +27,9 @@
 
                 <section class="section">
                 <div class="container">
-                  <button class="button is-primary" id="submitBtn">Purchase!</button>
+                  <button type="button" class="btn btn-primary"
+                          data-purchase="y"
+                          data-checkout-session-url="{% url 'checkout-session' event_id=event.id %}">Purchase!</button>
                 </div>
                 </section>
 
@@ -63,3 +56,12 @@
 </div>
 
 {% endblock content %}
+
+{% block scripts %}
+{{ block.super }}
+<script>
+const PAYMENTS_KEY_URL = "{% url 'payments-config' %}";
+</script>
+<script src="https://js.stripe.com/v3/"></script>
+<script src="{% static 'events/scripts/pay.js' %}"></script>
+{% endblock scripts %}

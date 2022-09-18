@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+import stripe
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, permission_required
@@ -8,6 +9,10 @@ from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
 import datetime
+from django.conf import settings # new
+from django.http.response import JsonResponse # new
+from django.views.decorators.csrf import csrf_exempt # new
+from django.views.generic.base import TemplateView
 
 from .models import Event, Topic, Comment
 from .forms import EventForm
@@ -108,7 +113,7 @@ def create_event(request):
     form = EventForm()
 
     if request.method == 'POST':
-        form = EventForm(request.POST)
+        form = EventForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('home')
@@ -167,3 +172,64 @@ def week_events(request):
     return render(request, 'events_of_week.html', {'event_this_week': event_this_week})
 
 
+class HomePageView(TemplateView):
+    template_name = 'home.html', 'event.html'
+
+# new
+@csrf_exempt
+def stripe_config(request):
+    if request.method == 'GET':
+        stripe_config = {'publicKey': settings.STRIPE_PUBLISHABLE_KEY}
+        return JsonResponse(stripe_config, safe=False)
+
+
+@csrf_exempt
+def create_checkout_session(request, event_id):
+    event = get_object_or_404(Event, pk=event_id)
+    quantity = int(request.GET.get("quantity", "1"))
+    if quantity > event.available_seats:
+        return JsonResponse({"error": "Not that many seats available"}, status=400)
+
+    if request.method == 'GET':
+        domain_url = 'http://localhost:8000/'
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        try:
+            # Create new Checkout Session for the order
+            # Other optional params include:
+            # [billing_address_collection] - to display billing address details on the page
+            # [customer] - if you have an existing Stripe Customer ID
+            # [payment_intent_data] - capture the payment later
+            # [customer_email] - prefill the email input in the form
+            # For full details see https://stripe.com/docs/api/checkout/sessions/create
+
+            # ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
+            checkout_session = stripe.checkout.Session.create(
+                success_url=domain_url + 'success/?session_id={CHECKOUT_SESSION_ID}',
+                cancel_url=domain_url + 'cancelled/',
+                payment_method_types=['card'],
+                mode='payment',
+                line_items=[
+                    {
+                        "price_data": {
+                            "currency": "eur",
+                            "unit_amount": event.price * 100,
+                            "product_data": {
+                                "name": event.name,
+                                "description": event.description,
+                            },
+                        },
+                        "quantity": 1,
+                    }
+                ]
+            )
+            return JsonResponse({'sessionId': checkout_session['id']})
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
+
+
+def get_payment_success(request):
+    return render(request, "events/payment_success.html")
+
+
+def get_payment_cancel(request):
+    return render(request, "events/payment_cancel.html")

@@ -12,4 +12,9 @@ urlpatterns = [
     path('delete-event/<int:pk>/', views.delete_event, name="delete-event"),
     path('delete-comment/<int:pk>/', views.delete_comment, name="delete-comment"),
     path('week-event', views.week_events, name="week-event"),
+    path('', views.HomePageView.as_view(), name='home'),
+    path('config/', views.stripe_config, name="payments-config"),
+    path('create-checkout-session/<int:event_id>/', views.create_checkout_session, name="checkout-session"),
+    path("success/", views.get_payment_success, name="payment-success"),
+    path("cancelled/", views.get_payment_cancel, name="payment-cancelled"),
 ]
