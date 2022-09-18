@@ -13,24 +13,31 @@
         <br>
 
         {% if request.user|has_group:"Stafi" %}
-            <a href="{% url 'create-event' %}">Create Event</a>
-            <br>
+        <a href="{% url 'create-event' %}">Create Event</a>
+        <br>
         {% endif %}
         <div class="event-list">
             {% for event in events %}
             <div>
                 {% if request.user|has_group:"Stafi" %}
-                    <a href="{% url 'update-event' event.id %}">Edit</a>
-                    <a href="{% url 'delete-event' event.id %}">Delete</a>
+                <a href="{% url 'update-event' event.id %}">Edit</a>
+                <a href="{% url 'delete-event' event.id %}">Delete</a>
                 {% endif %}
                 <h2> {{event.id}} -- <a href="{% url 'event' event.id %}">{{event.name}} </a></h2>
 
                 <section class="section">
-                <div class="container">
-                  <button type="button" class="btn btn-primary"
-                          data-purchase="y"
-                          data-checkout-session-url="{% url 'checkout-session' event_id=event.id %}">Purchase!</button>
-                </div>
+                    <div>
+                        <p>Seats: <b>{{ event.seats }}</b></p>
+                        <p>Still Available: <b>{{ event.available_seats }}</b></p>
+                    </div>
+
+                        <div class="input-group mb-3">
+                            <input type="number" class="form-control" value="1" min="0" max="{{ event.available_seats }}">
+                            <button type="button" class="btn btn-primary"
+                                data-purchase="y"
+                                data-checkout-session-url="{% url 'checkout-session' event_id=event.id %}">Purchase!
+                            </button>
+                        </div>
                 </section>
 
                 <h3>{{ event.location}}</h3>
@@ -48,9 +55,9 @@
             <h3><a href="{% url 'home' %}">All</a></h3>
         </div>
         {% for topic in topics %}
-            <div>
-                <h3><a href="{% url 'home' %}?q={{topic.name}}">{{topic.name}}</a></h3>
-            </div>
+        <div>
+            <h3><a href="{% url 'home' %}?q={{topic.name}}">{{topic.name}}</a></h3>
+        </div>
         {% endfor %}
     </div>
 </div>
@@ -61,6 +68,7 @@
 {{ block.super }}
 <script>
 const PAYMENTS_KEY_URL = "{% url 'payments-config' %}";
+
 </script>
 <script src="https://js.stripe.com/v3/"></script>
 <script src="{% static 'events/scripts/pay.js' %}"></script>

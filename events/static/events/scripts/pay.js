@@ -7,9 +7,11 @@ fetch(PAYMENTS_KEY_URL)
     eventListElem.addEventListener("click", (event) => {
         if (event.target.hasAttribute("data-purchase")) {
             const btn = event.target;
+            const quantityElem = btn.parentElement.querySelector('input[type=number]');
+            const quantity = quantityElem.value;
             const url = btn.dataset.checkoutSessionUrl;
 
-            fetch(url)
+            fetch(`${url}?quantity=${quantity}`)
               .then((result) => {
                   if (result.status >= 200 && result.status <= 299) {
                     return Promise.resolve(result.json());

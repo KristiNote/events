@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse
 from django.contrib import messages
+from django.utils import timezone
 from django.db.models import Q
 from django.core.paginator import Paginator
 import datetime
@@ -14,7 +15,7 @@ from django.http.response import JsonResponse # new
 from django.views.decorators.csrf import csrf_exempt # new
 from django.views.generic.base import TemplateView
 
-from .models import Event, Topic, Comment
+from .models import Event, Topic, Comment, Purchase
 from .forms import EventForm
 
 
@@ -204,7 +205,7 @@ def create_checkout_session(request, event_id):
 
             # ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
             checkout_session = stripe.checkout.Session.create(
-                success_url=domain_url + 'success/?session_id={CHECKOUT_SESSION_ID}',
+                success_url=domain_url + 'success/?session_id={CHECKOUT_SESSION_ID}' + f"&event_id={event_id}&quantity={quantity}",
                 cancel_url=domain_url + 'cancelled/',
                 payment_method_types=['card'],
                 mode='payment',
@@ -218,7 +219,7 @@ def create_checkout_session(request, event_id):
                                 "description": event.description,
                             },
                         },
-                        "quantity": 1,
+                        "quantity": quantity,
                     }
                 ]
             )
@@ -228,7 +229,14 @@ def create_checkout_session(request, event_id):
 
 
 def get_payment_success(request):
-    return render(request, "events/payment_success.html")
+    quantity = int(request.GET.get("quantity", "1"))
+    event_id = int(request.GET.get("event_id"))
+    event = get_object_or_404(Event, pk=event_id)
+    Purchase.objects.create(event=event, quantity=quantity, purchased_on=timezone.now())
+    return render(request, "events/payment_success.html", context={
+        "event": event,
+        "quantity": quantity,
+    })
 
 
 def get_payment_cancel(request):
