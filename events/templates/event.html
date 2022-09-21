@@ -1,4 +1,6 @@
 {% extends 'main.html' %}
+
+{% load embed_video_tags %}
 {% load static %}
 
 {% block content %}
@@ -9,15 +11,26 @@
     <h3>{{event.name}}</h3>
 
     <section class="section">
-    <div class="container">
-      <button class="button is-primary" id="submitBtn">Purchase!</button>
-    </div>
-    </section>
+                    <div>
+                        <p>Seats: <b>{{ event.seats }}</b></p>
+                        <p>Still Available: <b>{{ event.available_seats }}</b></p>
+                    </div>
+
+                        <div class="input-group mb-3">
+                            <input type="number" class="form-control" value="1" min="0" max="{{ event.available_seats }}">
+                            <button type="button" class="btn btn-primary"
+                                data-purchase="y"
+                                data-checkout-session-url="{% url 'checkout-session' event_id=event.id %}">Buy ticket!
+                            </button>
+                        </div>
+                </section>
 
     <h4>{{event.location}}</h4>
     <h5>{{event.start_date}}</h5>
-    <img src="{{ event.image.url }}" class="card-img" style="width:350px; height:350px;">
+    <img src="{{ event.image.url }}" class="card-img" style="width:650px; height:350px;">
+
     <p>{{event.description}}</p>
+    {% video event.video_url '426x240' %}
     <br>
     <div class="comment-wrapper">
         {% for comment in event_comments %}
@@ -42,3 +55,14 @@
     {% endif %}
 </div>
 {% endblock content %}
+
+{% block scripts %}
+{{ block.super }}
+
+<script>
+const PAYMENTS_KEY_URL = "{% url 'payments-config' %}";
+
+</script>
+<script src="https://js.stripe.com/v3/"></script>
+<script src="{% static 'events/scripts/pay.js' %}"></script>
+{% endblock scripts %}

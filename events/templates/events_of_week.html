@@ -1,11 +1,11 @@
 {% extends 'main.html' %}
 
 {% block content %}
-{% for event in event_week %}
-    <h2> {{event.id}} -- <a href="{% url 'event' event.id %}">{{event.name}}</a></h2>
+{% for event in event_this_week %}
+    <h2><a href="{% url 'event' event.id %}">{{event.name}}</a></h2>
     <h3>{{ event.location}}</h3>
-    <h4>From {{event.start_date}} to {{event.end_date}}</h4>
-    <img src="{{ event.image.url }}" class="card-img" style="width:350px; height:350px;">
+    <h4>{{event.start_date}}</h4>
+    <img src="{{ event.image.url }}" class="card-img" style="width:650px; height:350px;">
     <p> {{ event.description }}</p>
 {% endfor %}
 {% endblock content %}

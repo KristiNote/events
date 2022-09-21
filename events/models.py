@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.db.models import Sum
+from embed_video.fields import EmbedVideoField
 
 
 class Topic(models.Model):
@@ -18,8 +19,7 @@ class Event(models.Model):
     image = models.ImageField(upload_to='event/images/', null=True)
     seats = models.IntegerField(default=0)
     price = models.IntegerField(default=10)
-    #video
-    # ticket_available
+    video_url = EmbedVideoField(null=True)
     start_date = models.DateTimeField(null=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

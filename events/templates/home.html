@@ -4,7 +4,27 @@
 {% load filter %}
 
 {% block content %}
+
+<style>
+    .home-container {
+        display:grid;
+        grid-template-columns: 1fr 3fr;
+    }
+</style>
+
 <div class="home-container">
+
+    <div>
+        <h2>Topics</h2>
+        <div>
+            <h3><a href="{% url 'home' %}">All</a></h3>
+        </div>
+        {% for topic in topics %}
+        <div>
+            <h3><a href="{% url 'home' %}?q={{topic.name}}">{{topic.name}}</a></h3>
+        </div>
+        {% endfor %}
+    </div>
 
     <div>
         <h4>{{ event_count }} Events</h4>
@@ -19,11 +39,7 @@
         <div class="event-list">
             {% for event in events %}
             <div>
-                {% if request.user|has_group:"Stafi" %}
-                <a href="{% url 'update-event' event.id %}">Edit</a>
-                <a href="{% url 'delete-event' event.id %}">Delete</a>
-                {% endif %}
-                <h2> {{event.id}} -- <a href="{% url 'event' event.id %}">{{event.name}} </a></h2>
+                <h2><a href="{% url 'event' event.id %}">{{event.name}} </a></h2>
 
                 <section class="section">
                     <div>
@@ -35,30 +51,23 @@
                             <input type="number" class="form-control" value="1" min="0" max="{{ event.available_seats }}">
                             <button type="button" class="btn btn-primary"
                                 data-purchase="y"
-                                data-checkout-session-url="{% url 'checkout-session' event_id=event.id %}">Purchase!
+                                data-checkout-session-url="{% url 'checkout-session' event_id=event.id %}">Buy ticket!
                             </button>
                         </div>
                 </section>
 
                 <h3>{{ event.location}}</h3>
                 <h4>{{event.start_date}} </h4>
-                <img src="{{ event.image.url }}" class="card-img" style="width:350px; height:350px;">
+                <img src="{{ event.image.url }}" class="card-img" style="width:650px; height:350px;">
                 <p> {{ event.description }}</p>
+
+                {% if request.user|has_group:"Stafi" %}
+                <a href="{% url 'update-event' event.id %}">Edit</a>
+                <a href="{% url 'delete-event' event.id %}">Delete</a>
+                {% endif %}
             </div>
             {% endfor %}
         </div>
-    </div>
-
-    <div>
-        <h2>Topics</h2>
-        <div>
-            <h3><a href="{% url 'home' %}">All</a></h3>
-        </div>
-        {% for topic in topics %}
-        <div>
-            <h3><a href="{% url 'home' %}?q={{topic.name}}">{{topic.name}}</a></h3>
-        </div>
-        {% endfor %}
     </div>
 </div>
 
@@ -66,6 +75,7 @@
 
 {% block scripts %}
 {{ block.super }}
+
 <script>
 const PAYMENTS_KEY_URL = "{% url 'payments-config' %}";
 

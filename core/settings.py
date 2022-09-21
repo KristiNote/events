@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "embed_video",
 
     "events",
 ]
@@ -71,11 +72,19 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
             ],
             'libraries':{
-                'filter': 'events.templatetags.filter'},
+                'filter': 'events.templatetags.filter',
+
+            },
+
 
         },
     },
 ]
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+'django.core.context_processors.request',
+)
+
 
 WSGI_APPLICATION = "core.wsgi.application"
 
@@ -127,9 +136,6 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-STATIC_URL = "/static/"
-
-STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
