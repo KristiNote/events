@@ -55,3 +55,8 @@ class Purchase(models.Model):
 
     class Meta:
         db_table = "purchases"
+
+class Contact(models.Model):
+    name = models.CharField(max_length=255)
+    email = models.EmailField()
+    content = models.TextField()

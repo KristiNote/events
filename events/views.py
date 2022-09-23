@@ -15,9 +15,10 @@ from django.http.response import JsonResponse # new
 from django.views.decorators.csrf import csrf_exempt # new
 from django.views.generic.base import TemplateView
 from django.core.mail import send_mail
+from django.template.loader import render_to_string
 
 from .models import Event, Topic, Comment, Purchase
-from .forms import EventForm
+from .forms import EventForm, ContactForm
 
 
 User = get_user_model()
@@ -162,23 +163,28 @@ def delete_comment(request, pk):
 
     return render(request, 'delete.html', {'obj': comment})
 
-def contact(request):
+
+def contact_email(request):
+    form = ContactForm()
     if request.method == 'POST':
-        name = request.POST['name']
-        emailAddress = request.POST['emailAddress']
-        message = request.POST['message']
-        send_mail(
-            name,
-            message,
-            emailAddress,
-            ['kristinote88@gmail.com'],
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            content = form.cleaned_data['content']
 
-        )
+            send_mail(
+                name,
+                content,
+                email,
+                [' events_email@gmail.com'])
 
-        return render(request, 'contact.html', {'name': name})
+            return redirect('contact')
+        else:
+            form = ContactForm()
 
-    else:
-        return render(request, 'contact.html',)
+    return render(request, 'contact.html', {'form': form})
+
 
 
 def week_events(request):
