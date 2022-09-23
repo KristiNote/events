@@ -86,6 +86,22 @@
                 <br><br><br>
             </div>
             {% endfor %}
+
+            <div>
+                {% if events_page.has_previous %}
+                    <a href="?page=1">&laquo First</a>
+                    <a href="?page={{ events_page.previous_page_number }}">Previous</a>
+                {% endif %}
+
+                Page {{ events_page.number }} of {{ events_page.paginator.num_pages }}
+
+                {% if events_page.has_next %}
+                 <a href="?page={{ events_page.next_page_number }}">Next</a>
+                 <a href="?page={{ events_page.paginator.num_pages}}">Last &raquo</a>
+                {% endif %}
+
+            </div>
+
         </div>
     </div>
 </div>
@@ -102,3 +118,4 @@ const PAYMENTS_KEY_URL = "{% url 'payments-config' %}";
 <script src="https://js.stripe.com/v3/"></script>
 <script src="{% static 'events/scripts/pay.js' %}"></script>
 {% endblock scripts %}
+

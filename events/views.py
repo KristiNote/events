@@ -71,9 +71,12 @@ def register_page(request):
 
 
 def home(request):
+    events = Event.objects.all()
+    topics = Topic.objects.all()
+
+
     q = request.GET.get('q')
 
-    events = Event.objects.all()
     if q is not None:
         events = events.filter(
             Q(topic__name__icontains=q) |
@@ -81,19 +84,15 @@ def home(request):
             Q(description__icontains=q)
         )
 
-    topics = Topic.objects.all()
     event_count = events.count()
 
-    try:
-        page_no = int(request.GET.get("page", "1"))
-    except ValueError:
-        page_no = 1
+    p = Paginator(Event.objects.all(), 2)
+    page = request.GET.get('page')
+    events_page = p.get_page(page)
 
-    paginator = Paginator(events, per_page=2)
-    page_obj = paginator.page(page_no)
-
-    context = {'events': events, 'topics': topics, 'event_count': event_count}
+    context = {'events': events, 'topics': topics, 'event_count': event_count,"events_page":events_page}
     return render(request, 'home.html', context)
+
 
 
 def get_event_details(request, pk):
