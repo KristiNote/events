@@ -4,46 +4,62 @@
 {% load static %}
 
 {% block content %}
+<style>
+.event-container {
+        padding:60px 0 0 0;
+        margin-left:  50px;}
+
+ .img_video {
+    display: grid;
+    grid-template-columns:1fr 1fr;
+    gap: 20px;
+    }
+
+    a {
+     color: black;
+     text-decoration: none;
+    }
+</style>
 
 
 <div class="event-container">
+    <div class="img_video">
+        <div class="card mb-3" style="max-width: 1000px;">
+          <div class="row g-0">
+            <div class="col-md-4">
+              <img src="{{ event.image.url }}" class="img-fluid rounded-start" alt="...">
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-title">{{event.name}}</h5>
+                <h6 class="card-title">{{event.location}}</h6>
+                <h6 class="card-title">{{event.start_date}}</h6>
+                <p class="card-text"><p>{{event.description}}</p></p>
+                  <div class="input-group mb-3">
+                      <input type="number" class="form-control" value="1" min="0" max="{{ event.available_seats }}">
+                  </div>
+                    <button type="button" class="btn btn-primary" data-purchase="y"
+                            data-checkout-session-url="{% url 'checkout-session' event_id=event.id %}">Buy ticket!
+                    </button>
+                </div>
+            </div>
+          </div>
+        </div>
+        {% video event.video_url '650x350' %}
+    </div>
 
-    <h3>{{event.name}}</h3>
-
-    <section class="section">
-                    <div>
-                        <p>Seats: <b>{{ event.seats }}</b></p>
-                        <p>Still Available: <b>{{ event.available_seats }}</b></p>
-                    </div>
-
-                        <div class="input-group mb-3">
-                            <input type="number" class="form-control" value="1" min="0" max="{{ event.available_seats }}">
-                            <button type="button" class="btn btn-primary"
-                                data-purchase="y"
-                                data-checkout-session-url="{% url 'checkout-session' event_id=event.id %}">Buy ticket!
-                            </button>
-                        </div>
-                </section>
-
-    <h4>{{event.location}}</h4>
-    <h5>{{event.start_date}}</h5>
-    <img src="{{ event.image.url }}" class="card-img" style="width:650px; height:350px;">
-
-    <p>{{event.description}}</p>
-    {% video event.video_url '426x240' %}
-    <br>
     <div class="comment-wrapper">
         {% for comment in event_comments %}
         <div>
-            {% if request.user == comment.user %}
-            <a href="{% url 'delete-comment' comment.id %}">Delete</a>
-            {% endif %}
             <small>@{{comment.user}}  {{comment.created|timesince}} ago</small>
             <p>{{comment.body}}</p>
-            <br>
+             {% if request.user == comment.user %}
+            <button type="button" class="btn btn-danger"><a href="{% url 'delete-comment' comment.id %}">Delete</a></button>
+            {% endif %}
         </div>
         {% endfor %}
     </div>
+    <br>
 
     {% if request.user.is_authenticated %}
     <div class="comment-form">
@@ -53,6 +69,11 @@
         </form>
     </div>
     {% endif %}
+
+    <br><br>
+
+    <div class="mapouter"><div class="gmap_canvas"><iframe class="gmap_iframe" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?width=600&amp;height=400&amp;hl=en&amp;q=sheshi skenderbej&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe><a href="https://mcpenation.com/">https://mcpenation.com</a></div><style>.mapouter{position:relative;text-align:right;width:600px;height:400px;}.gmap_canvas {overflow:hidden;background:none!important;width:600px;height:400px;}.gmap_iframe {width:600px!important;height:400px!important;}</style></div>
+    <br>
 </div>
 {% endblock content %}
 

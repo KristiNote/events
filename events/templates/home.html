@@ -7,64 +7,83 @@
 
 <style>
     .home-container {
+        padding:60px 0 0 30px;
         display:grid;
-        grid-template-columns: 1fr 3fr;
+        grid-template-columns: 1fr 4fr 1fr;
+        gap: 40px;
+    }
+
+    a {
+     color: black;
+     text-decoration: none;
     }
 </style>
 
-<div class="home-container">
 
+<div class="home-container">
     <div>
-        <h2>Topics</h2>
         <div>
-            <h3><a href="{% url 'home' %}">All</a></h3>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item" style="background-color:white">
+                    <span class="badge rounded-pill text-bg-light">
+                        <h4><a href="{% url 'home' %}">All</a></h4>
+                    </span>
+                </li>
+            </ul>
+
         </div>
         {% for topic in topics %}
         <div>
-            <h3><a href="{% url 'home' %}?q={{topic.name}}">{{topic.name}}</a></h3>
+            <ul class="list-group list-group-flush" >
+                <li class="list-group-item" style="background-color:white">
+                    <span class="badge rounded-pill text-bg-light">
+                        <h4><a href="{% url 'home' %}?q={{topic.name}}">{{topic.name}}</a></h4>
+                    </span>
+                </li>
+            </ul>
         </div>
         {% endfor %}
     </div>
 
     <div>
-        <h4>{{ event_count }} Events</h4>
-
-        <a href="{% url 'week-event' %}">This week</a>
-        <br>
-
         {% if request.user|has_group:"Stafi" %}
-        <a href="{% url 'create-event' %}">Create Event</a>
+        <button class="btn btn-primary"><a href="{% url 'create-event' %}">Create Event</a></button>
         <br>
         {% endif %}
         <div class="event-list">
+            <span class="badge rounded-pill text-bg-secondary"><h5>{{ event_count }} events</h5></span>
+            <br><br>
             {% for event in events %}
             <div>
                 <h2><a href="{% url 'event' event.id %}">{{event.name}} </a></h2>
 
-                <section class="section">
+                <h3>{{ event.location}}</h3>
+                <h4>{{event.start_date}} </h4>
+
+                <div class="card mb-3">
+                  <img src="{{ event.image.url }}" class="card-img-top" alt="...">
+                  <div class="card-body">
+                    <p class="card-text">{{ event.description }}</p>
+                  </div>
+                    <div class="input-group mb-3">
+                            <input type="number" class="form-control" value="1" min="0" max="{{ event.available_seats }}">
+                        </div>
+                    <button type="button" class="btn btn-primary" data-purchase="y"
+                            data-checkout-session-url="{% url 'checkout-session' event_id=event.id %}">Buy ticket!
+                    </button>
+                </div>
+                 <section class="section">
                     <div>
                         <p>Seats: <b>{{ event.seats }}</b></p>
                         <p>Still Available: <b>{{ event.available_seats }}</b></p>
                     </div>
-
-                        <div class="input-group mb-3">
-                            <input type="number" class="form-control" value="1" min="0" max="{{ event.available_seats }}">
-                            <button type="button" class="btn btn-primary"
-                                data-purchase="y"
-                                data-checkout-session-url="{% url 'checkout-session' event_id=event.id %}">Buy ticket!
-                            </button>
-                        </div>
                 </section>
 
-                <h3>{{ event.location}}</h3>
-                <h4>{{event.start_date}} </h4>
-                <img src="{{ event.image.url }}" class="card-img" style="width:650px; height:350px;">
-                <p> {{ event.description }}</p>
-
                 {% if request.user|has_group:"Stafi" %}
-                <a href="{% url 'update-event' event.id %}">Edit</a>
-                <a href="{% url 'delete-event' event.id %}">Delete</a>
+                <button type="button" class="btn btn-warning"><a href="{% url 'update-event' event.id %}">Edit</a></button>
+                <button type="button" class="btn btn-danger"><a href="{% url 'delete-event' event.id %}">Delete</a></button>
                 {% endif %}
+                <br><br><br>
             </div>
             {% endfor %}
         </div>

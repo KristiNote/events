@@ -1,12 +1,31 @@
 {% extends 'main.html' %}
 
 {% block content %}
+
+<style>
+    .cont {
+        padding:60px 0 0 100px;
+        display:grid;
+        grid-template-columns: 1fr 1fr;}
+   a {
+     color: black;
+     text-decoration: none;
+    }
+
+</style>
+
 {% for event in event_this_week %}
+<div class="cont">
+  <div class="card mb-3">
     <h2><a href="{% url 'event' event.id %}">{{event.name}}</a></h2>
     <h3>{{ event.location}}</h3>
     <h4>{{event.start_date}}</h4>
-    <img src="{{ event.image.url }}" class="card-img" style="width:650px; height:350px;">
-    <p> {{ event.description }}</p>
+    <img src="{{ event.image.url }}" class="card-img-top">
+    <div class="card-body"><p class="card-text"> {{ event.description }}</p></div>
+  </div>
+</div>
 {% endfor %}
 {% endblock content %}
+
+
 
