@@ -2,20 +2,58 @@
 
 {% block content %}
 
+<style>
+input[type=submit] {
+  background-color: #04AA6D;
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-decoration: none;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+</style>
+<button type="button" class="btn btn-success d-table my-5 mx-auto" data-bs-toggle="modal" data-bs-target="#ModalForm">
+  Login
+</button>
 
-<div>
-    <form method="POST" action="">
-        {% csrf_token %}
-        <label>Username:</label>
-        <input type="text" name="username" placeholder="Enter username">
+<!-- Modal Form -->
+<div class="modal fade" id="ModalForm" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+        <!-- Login Form -->
+        <form  method="POST" action="">
+            {% csrf_token %}
+          <div class="modal-header">
+            <h5 class="modal-title">Modal Login Form</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+              <div class="modal-body">
+                <div class="mb-3">
+                    <label for="Username">Username<span class="text-danger">*</span></label>
+                    <input type="text" name="username" class="form-control" id="Username" placeholder="Enter Username">
+                </div>
 
-        <label>Password:</label>
-        <input type="password" name="password" placeholder="Enter password">
-
-        <input type="submit" value="Login">
-    </form>
-
-    <p>Haven't singed up yet?</p>
-    <a href="{% url 'register' %}">Sign up </a>
+                <div class="mb-3">
+                    <label for="Password">Password<span class="text-danger">*</span></label>
+                    <input type="password" name="password" class="form-control" id="Password" placeholder="Enter Password">
+                </div>
+            <div class="mb-3">
+                <input class="form-check-input" type="checkbox" value="" id="remember" >
+                <label class="form-check-label" for="remember">Remember Me</label>
+                <a href="#" class="float-end">Forgot Password</a>
+            </div>
+          </div>
+          <div class="modal-footer pt-4">
+            <input type="submit" value="Login">
+          </div>
+          <p class="text-center">Not yet account, <a href="{% url 'register' %}">Signup</a></p>
+      </form>
+    </div>
+  </div>
 </div>
+
+
 {% endblock content %}
+
+
