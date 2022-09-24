@@ -1,12 +1,21 @@
 {% extends 'main.html' %}
-
+{% load static %}
+{% load crispy_forms_tags %}
 {% block content %}
+<style>
+    a {
+     color:white;
+     text-decoration: none;
+    }
+
+</style>
 
     <form method="POST" action="">
         {% csrf_token %}
+        {{ form|crispy }}
         <p>Are you sure you want to delete {{obj}} ?</p>
-        <a href="{{request.META.HTTP_REFERER}}">Go back!</a>
-        <input type="submit"  value="Delete" />
+        <button type="button" class="btn btn-success btn-lg"><a href="{{request.META.HTTP_REFERER}}">Go back!</a></button>
+        <button type="submit" value="Submit" class="btn btn-lg btn-danger">Delete</button>
     </form>
 
 {% endblock content %}
