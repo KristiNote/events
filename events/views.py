@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
 from django.http import HttpResponse
 from django.contrib import messages
 from django.utils import timezone
@@ -176,8 +177,8 @@ def contact_email(request):
                 name,
                 content,
                 email,
-                [' events_email@gmail.com'])
-
+                ['events_email@gmail.com'])
+            messages.success(request, "Thank you for contacting us!")
             return redirect('contact')
         else:
             form = ContactForm()
