@@ -87,7 +87,7 @@ def home(request):
 
     event_count = events.count()
 
-    p = Paginator(Event.objects.all(), 2)
+    p = Paginator(events, 2)
     page = request.GET.get('page')
     events_page = p.get_page(page)
 
